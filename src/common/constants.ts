@@ -12,5 +12,6 @@ export const SERVICES: Record<string, symbol> = {
   CONFIG: Symbol('Config'),
   TRACER: Symbol('Tracer'),
   METER: Symbol('Meter'),
+  WATCHER_CONFIG: Symbol('IWatcherConfig'),
 };
 /* eslint-enable @typescript-eslint/naming-convention */

@@ -4,6 +4,33 @@ global:
   metrics: {}
   environment: {}
 
+rasterCommon:
+  serviceUrls:
+    discreteOverseer: http://localhost:8081
+    discreteAgentDb: http://localhost:8082
+  storage:
+    fs:
+      internalPvc:
+        enabled: true
+        name: internal-pvc
+        configSubPath: config
+      ingestionSourcePvc:
+        enabled: true
+        name: ingestion-source-pvc
+        subPath: ingestion-source
+
+    s3:
+      endpointUrl: 'http://localhost:9000'
+      bucket: 'raster'
+      forcePathStyle: true
+      sslEnabled: false
+      virtualHosting: false
+      secretName: raster-config-s3-secret
+  ca:
+    secretName: ''
+    path: '/usr/local/share/ca-certificates'
+    key: 'ca.crt'
+
 enabled: true
 environment: development
 replicaCount: 1
@@ -16,22 +43,40 @@ cloudProvider:
   imagePullSecretName: 'my-registry-secret'
   flavor: openshift
 
-caSecretName: ''
-caPath: '/usr/local/share/ca-certificates'
-caKey: 'ca.crt'
-
 image:
-  repository: ts-server-boilerplate
+  repository: discrete-agent
   tag: 'latest'
 
+S3:
+  secret:
+    createSecret: false # secret should be created on higher level for deployments with multiple services
+    accessKeyId: '' # used only when creating secret
+    secretAccessKey: '' # used only when creating secret
+
 env:
-  port: 8080
+  port: 80
   targetPort: 8080
   protocol: TCP
   logLevel: info
-  logPrettyPrintEnabled: false
-  responseCompressionEnabled: true
-  requestPayloadLimit: 1mb
+  watcher:
+    rootDirNestingLevel: 1
+    directory: 'watch'
+    options:
+      minTriggerDepth: 1
+      maxWatchDepth: 2
+      interval: 1000
+    shpRetry:
+      retries: 2
+      factor: 2
+      minTimeout: 1000
+      maxTimeout: 60000
+      randomize: false
+  httpRetry:
+    attempts: 5
+    delay: 'exponential'
+    shouldResetTimeout: true
+  classification:
+    storageProvider: FS
   tracing:
     enabled: false
     url: http://localhost:55681/v1/trace
@@ -50,7 +95,7 @@ resources:
       memory: 128Mi
 
 route:
-  enabled: true
+  enabled: false
   path: /
   timeout:
     enabled: false # defaults to 30s by openshift

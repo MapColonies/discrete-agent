@@ -25,12 +25,15 @@ module.exports = {
   moduleDirectories: ['node_modules', 'src'],
   preset: 'ts-jest',
   testEnvironment: 'node',
+  moduleNameMapper: {
+    mockService: '<rootDir>/src/tests/__mocks__',
+  },
   coverageThreshold: {
     global: {
-      branches: 80,
-      functions: 80,
-      lines: 80,
-      statements: -10,
+      branches: 30,
+      functions: 60,
+      lines: 60,
+      statements: 65,
     },
   },
 };

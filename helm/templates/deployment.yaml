@@ -1,9 +1,9 @@
 {{- $releaseName := .Release.Name -}}
-{{- $chartName := include "ts-server-boilerplate.name" . -}}
-{{- $cloudProviderFlavor := include "ts-server-boilerplate.cloudProviderFlavor" . -}}
-{{- $cloudProviderDockerRegistryUrl := include "ts-server-boilerplate.cloudProviderDockerRegistryUrl" . -}}
-{{- $cloudProviderImagePullSecretName := include "ts-server-boilerplate.cloudProviderImagePullSecretName" . -}}
-{{- $imageTag := include "ts-server-boilerplate.tag" . -}}
+{{- $chartName := include "discrete-agent.name" . -}}
+{{- $cloudProviderFlavor := include "discrete-agent.cloudProviderFlavor" . -}}
+{{- $cloudProviderDockerRegistryUrl := include "discrete-agent.cloudProviderDockerRegistryUrl" . -}}
+{{- $cloudProviderImagePullSecretName := include "discrete-agent.cloudProviderImagePullSecretName" . -}}
+{{- $imageTag := include "discrete-agent.tag" . -}}
 {{- if .Values.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -12,9 +12,9 @@ metadata:
   labels:
     app: {{ $chartName }}
     component: {{ $chartName }}
-    environment: {{ include "ts-server-boilerplate.environment" . }}
+    environment: {{ include "discrete-agent.environment" . }}
     release: {{ $releaseName }}
-    {{- include "ts-server-boilerplate.labels" . | nindent 4 }}
+    {{- include "discrete-agent.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -22,14 +22,14 @@ spec:
       app: {{ $chartName }}
       release: {{ $releaseName }}
       run: {{ $releaseName }}-{{ $chartName }}
-      {{- include "ts-server-boilerplate.selectorLabels" . | nindent 6 }}
+      {{- include "discrete-agent.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         app: {{ $chartName }}
         release: {{ $releaseName }}
         run: {{ $releaseName }}-{{ $chartName }}
-        {{- include "ts-server-boilerplate.selectorLabels" . | nindent 8 }}
+        {{- include "discrete-agent.selectorLabels" . | nindent 8 }}
       {{- if .Values.resetOnConfigChange }}
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
@@ -45,19 +45,61 @@ spec:
           image: {{ $cloudProviderDockerRegistryUrl }}{{ .repository }}:{{ $imageTag }}
           {{- end }}
           volumeMounts:
-            {{- if .Values.caSecretName }}
-            - mountPath: {{ printf "%s/%s" .Values.caPath .Values.caKey | quote }}
+            {{- if .Values.rasterCommon.storage.fs.ingestionSourcePvc.enabled }}
+            - name: ingestion-storage
+              mountPath: /layerSources
+              {{- if .Values.rasterCommon.storage.fs.ingestionSourcePvc.subPath }}
+              subPath: {{ .Values.rasterCommon.storage.fs.ingestionSourcePvc.subPath }}
+              {{- end }}
+            {{- end }}
+            {{- if and .Values.rasterCommon.storage.fs.internalPvc.enabled (eq (upper .Values.env.classification.storageProvider) "FS") }}
+            - name: classification-config
+              mountPath: /config
+              subPath: {{ .Values.rasterCommon.storage.fs.internalPvc.configSubPath }}
+            {{- end }}
+            {{- if .Values.rasterCommon.ca.secretName }}
+            - mountPath: {{ printf "%s/%s" .Values.rasterCommon.ca.path .Values.rasterCommon.ca.key | quote }}
               name: root-ca
-              subPath: {{ quote .Values.caKey }}
+              subPath: {{ quote .Values.rasterCommon.ca.key }}
             {{- end }}
           env:
             - name: SERVER_PORT
               value: {{ .Values.env.targetPort | quote }}
-            {{- if .Values.caSecretName }}
+            - name: MOUNT_DIRECTORY
+              value: /layerSources
+            {{- if eq (upper .Values.env.classification.storageProvider) "S3" }}
+            - name: S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.rasterCommon.storage.s3.secretName }}
+                  key: accessKeyId
+            - name: S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.rasterCommon.storage.s3.secretName }}
+                  key: secretAccessKey
+            - name: S3_ENDPOINT
+              value: {{ .Values.rasterCommon.storage.s3.endpointUrl | quote }}
+            - name: S3_BUCKET
+              value: {{ .Values.rasterCommon.storage.s3.bucket | quote }}
+            - name: S3_FORCE_PATH_STYLE
+              value: {{ .Values.rasterCommon.storage.s3.forcePathStyle | quote }}
+            - name: S3_SSL_ENABLED
+              value: {{ .Values.rasterCommon.storage.s3.sslEnabled | quote }}
+            {{- end }}
+            - name: EXTERNAL_READINESS_URL
+              value: ''
+            - name: CLASSIFICATION_OPTIONS_FILE_LOCATION
+            {{- if eq (upper .Values.env.classification.storageProvider) "FS" }}
+              value: /config/classification.json
+            {{- else }}
+              value: config/classification.json
+            {{- end }}
+            {{- if .Values.rasterCommon.ca.secretName }}
             - name: REQUESTS_CA_BUNDLE
-              value: {{ printf "%s/%s" .Values.caPath .Values.caKey | quote }}
+              value: {{ printf "%s/%s" .Values.rasterCommon.ca.path .Values.rasterCommon.ca.key | quote }}
             - name: NODE_EXTRA_CA_CERTS
-              value: {{ printf "[%s/%s]" .Values.caPath .Values.caKey | quote }}
+              value: {{ printf "[%s/%s]" .Values.rasterCommon.ca.path .Values.rasterCommon.ca.key | quote }}
             {{- end }}
           envFrom:
             - configMapRef:
@@ -76,9 +118,19 @@ spec:
             {{- toYaml .Values.resources.value | nindent 12 }}
           {{- end }}
       volumes:
-        {{- if .Values.caSecretName }}
+        {{- if and .Values.rasterCommon.storage.fs.internalPvc.enabled (eq (upper .Values.env.classification.storageProvider) "FS") }}
+        - name: classification-config
+          persistentVolumeClaim:
+            claimName: {{ .Values.rasterCommon.storage.fs.internalPvc.name }} 
+        {{- end }}      
+        {{- if .Values.rasterCommon.storage.fs.ingestionSourcePvc.enabled }}
+        - name: ingestion-storage
+          persistentVolumeClaim:
+            claimName: {{ quote .Values.rasterCommon.storage.fs.ingestionSourcePvc.name }}
+        {{- end }}
+        {{- if .Values.rasterCommon.ca.secretName }}
         - name: root-ca
           secret:
-            secretName: {{ .Values.caSecretName }}
+            secretName: {{ .Values.rasterCommon.ca.secretName }}
         {{- end }}
 {{- end -}}
