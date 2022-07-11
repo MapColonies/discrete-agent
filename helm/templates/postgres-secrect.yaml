@@ -1,0 +1,22 @@
+{{- if and .Values.postgresSecret.enabled (not .Values.rasterCommon.db.secrets.useExternal) -}}
+{{ $caPath := .Values.local.certs.postgres.ca }}
+{{ $keyPath := .Values.local.certs.postgres.key }}
+{{ $certPath := .Values.local.certs.postgres.cert }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-postgres-secret
+type: Opaque
+stringData:
+  username: {{ quote .Values.postgresSecret.userName }}
+  password: {{ quote .Values.postgresSecret.password }}
+  {{- if .Values.env.db.sslEnabled }}
+  caFile: {{ .Files.Get $caPath | quote }}
+  keyFile: {{ .Files.Get $keyPath | quote }}
+  certFile: {{ .Files.Get $certPath | quote }}
+  {{- else }}
+  caFile: ""
+  keyFile: ""
+  certFile: ""
+  {{- end }}
+{{- end }}

@@ -9,8 +9,8 @@ import { Logger } from '@map-colonies/js-logger';
 import httpLogger from '@map-colonies/express-access-log-middleware';
 import { SERVICES } from './common/constants';
 import { IConfig } from './common/interfaces';
-import { RESOURCE_NAME_ROUTER_SYMBOL } from './resourceName/routes/resourceNameRouter';
-import { ANOTHER_RESOURECE_ROUTER_SYMBOL } from './anotherResource/routes/anotherResourceRouter';
+import { LAYER_HISTORY_ROUTER_SYMBOL } from './layerHistory/routes/layerHistoryRouter';
+import { STATUS_ROUTER_SYMBOL } from './status/routes/statusRouter';
 
 @injectable()
 export class ServerBuilder {
@@ -19,8 +19,8 @@ export class ServerBuilder {
   public constructor(
     @inject(SERVICES.CONFIG) private readonly config: IConfig,
     @inject(SERVICES.LOGGER) private readonly logger: Logger,
-    @inject(RESOURCE_NAME_ROUTER_SYMBOL) private readonly resourceNameRouter: Router,
-    @inject(ANOTHER_RESOURECE_ROUTER_SYMBOL) private readonly anotherResourceRouter: Router
+    @inject(LAYER_HISTORY_ROUTER_SYMBOL) private readonly layerHistoryRouter: Router,
+    @inject(STATUS_ROUTER_SYMBOL) private readonly statusRouter: Router
   ) {
     this.serverInstance = express();
   }
@@ -40,8 +40,8 @@ export class ServerBuilder {
   }
 
   private buildRoutes(): void {
-    this.serverInstance.use('/resourceName', this.resourceNameRouter);
-    this.serverInstance.use('/anotherResource', this.anotherResourceRouter);
+    this.serverInstance.use('/status', this.statusRouter);
+    this.serverInstance.use('/layers', this.layerHistoryRouter);
     this.buildDocsRoutes();
   }
 

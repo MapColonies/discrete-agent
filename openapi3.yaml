@@ -1,58 +1,132 @@
 openapi: 3.0.1
 info:
-  title: service-name
+  title: Discrete-agent-DB
   description: basic template for map colonies service
   version: 1.0.0
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-
 paths:
-  /anotherResource:
+  /status:
     get:
-      operationId: getAnotherResource
+      operationId: getStatus
       tags:
-        - anotherResource
-      summary: gets the resource
+        - Status
+      summary: gets the agent status
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/anotherResource'
-  /resourceName:
-    get:
-      operationId: getResourceName
+                $ref: '#/components/schemas/status'
+    put:
+      operationId: updateStatus
       tags:
-        - resourceName
-      summary: gets the resource
+        - Status
+      summary: updates the agent status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/status'
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/resource'
-    post:
-      operationId: createResource
-      tags:
-        - resourceName
-      summary: creates a new record of type resource
-      responses:
-        201:
-          description: created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/resource'
+                $ref: '#/components/schemas/status'
         400:
           description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+  /layers/{directory}:
+    get:
+      operationId: getLayerHistory
+      tags:
+        - LayerHistory
+      summary: gets the history record of specific layer
+      parameters:
+        - $ref: '#/components/parameters/directoryParam'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layerHistoryRecord'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      operationId: CreateLayerHistory
+      tags:
+        - LayerHistory
+      summary: creates history record for specific layer
+      parameters:
+        - $ref: '#/components/parameters/directoryParam'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layerHistoryRecord'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    put:
+      operationId: UpdateLayerHistoryStatus
+      tags:
+        - LayerHistory
+      summary: update the status of history record for specific layer
+      parameters:
+        - $ref: '#/components/parameters/directoryParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                version:
+                  type: string
+                status:
+                  $ref: '#/components/schemas/historyStatus'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/layerHistoryRecord'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
 components:
+  parameters:
+    directoryParam:
+      name: directory
+      in: path
+      description: layer source directory
+      required: true
+      schema:
+        type: string
   schemas:
     error:
       type: object
@@ -61,27 +135,27 @@ components:
       properties:
         message:
           type: string
-    resource:
+    status:
       type: object
       required:
-        - id
-        - name
-        - description
+        - isWatching
       properties:
-        id:
-          type: number
-          format: int64
-        name:
-          type: string
-        description:
-          type: string
-    anotherResource:
-      type: object
-      required:
-        - kind
-        - isAlive
-      properties:
-        kind:
-          type: string
-        isAlive:
+        isWatching:
           type: boolean
+    layerHistoryRecord:
+      type: object
+      properties:
+        directory:
+          type: string
+        id:
+          type: string
+        version:
+          type: string
+        status:
+          $ref: '#/components/schemas/historyStatus'
+    historyStatus:
+      type: string
+      enum:
+        - inProgress
+        - triggered
+        - failed
