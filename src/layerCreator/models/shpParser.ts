@@ -22,7 +22,6 @@ export class ShpParser {
       const error = err as Error;
       this.logger.error(`failed to parse shapeFile: ${error.message}`);
       throw new BadRequestError(error, `Invalid shp file: ${shp}`);
-      // throw new BadRequestError(`Invalid shp file: ${shp}, err: ${error.message}`);
     }
   }
 }

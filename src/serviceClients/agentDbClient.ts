@@ -76,6 +76,7 @@ export class AgentDbClient extends HttpClient {
 
   public async setWatchStatus(status: IWatchStatus): Promise<IWatchStatus> {
     try {
+      this.logger.info(`changing watch status into: ${status.isWatching.toString()}`);
       return await this.put('/status', status);
     } catch (err) {
       const error = err as Error;

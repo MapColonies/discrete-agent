@@ -58,6 +58,9 @@ env:
   targetPort: 8080
   protocol: TCP
   logLevel: info
+  logPrettyPrintEnabled: false
+  responseCompressionEnabled: true
+  requestPayloadLimit: 1mb
   watcher:
     rootDirNestingLevel: 1
     directory: 'watch'

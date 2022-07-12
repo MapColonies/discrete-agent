@@ -2,13 +2,12 @@ import { join } from 'path';
 import { inject, injectable } from 'tsyringe';
 import { GeoJSON } from 'geojson';
 import retry from 'async-retry';
-import { toInteger, get as readProp } from 'lodash';
+import { get as readProp } from 'lodash';
 import { IngestionParams } from '@map-colonies/mc-model-types';
 import { Logger } from '@map-colonies/js-logger';
 import { BadRequestError, NotFoundError } from '@map-colonies/error-types';
 import { SERVICES } from '../../common/constants';
 import { IConfig } from '../../common/interfaces';
-import { toBoolean } from '../../common/utilities/typeConvertors';
 import { OverseerClient } from '../../serviceClients/overseerClient';
 import { AgentDbClient } from '../../serviceClients/agentDbClient';
 import { HistoryStatus } from '../historyStatus';
@@ -36,7 +35,7 @@ export class Trigger {
     @inject(SERVICES.CONFIG) private readonly config: IConfig
   ) {
     this.mountDir = config.get<string>('mountDir');
-    this.retryOptions = this.parseOptions(config);
+    this.retryOptions = config.get<retry.Options>('watcher.shpRetry');
   }
 
   public async trigger(directory: string, isManual = false): Promise<void> {
@@ -156,25 +155,5 @@ export class Trigger {
       }
     }, this.retryOptions);
     return res;
-  }
-
-  private parseOptions(config: IConfig): retry.Options {
-    const options = { ...config.get<retry.Options>('watcher.shpRetry') };
-    if (options.retries != undefined) {
-      options.retries = toInteger(options.retries);
-    }
-    if (options.factor !== undefined) {
-      options.factor = toInteger(options.factor);
-    }
-    if (options.minTimeout !== undefined) {
-      options.minTimeout = toInteger(options.minTimeout);
-    }
-    if (options.maxRetryTime !== undefined) {
-      options.maxRetryTime = toInteger(options.maxTimeout);
-    }
-    if (options.randomize !== undefined) {
-      options.randomize = toBoolean(options.randomize);
-    }
-    return options;
   }
 }

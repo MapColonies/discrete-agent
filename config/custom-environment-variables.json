@@ -45,18 +45,45 @@
       "__name": "ROOT_DIR_NESTING_LEVEL",
       "__format": "number"
     },
-    "watchDirectory": "WATCH_DIRECTORY",
+    "watchDirectory": {
+      "__name": "WATCH_DIRECTORY",
+      "__format": "number"
+    },
     "watchOptions": {
-      "minTriggerDepth": "WATCH_MIN_TRIGGER_DEPTH",
-      "maxWatchDepth": "WATCH_MAX_TRIGGER_DEPTH",
-      "interval": "WATCH_INTERVAL"
+      "minTriggerDepth": {
+        "__name": "WATCH_MIN_TRIGGER_DEPTH",
+        "__format": "number"
+      },
+      "maxWatchDepth": {
+        "__name": "WATCH_MAX_TRIGGER_DEPTH",
+        "__format": "number"
+      },
+      "interval": {
+        "__name": "WATCH_INTERVAL",
+        "__format": "number"
+      }
     },
     "shpRetry": {
-      "retries": "WATCHER_SHP_RETRY_COUNT",
-      "factor": "WATCHER_SHP_RETRY_FACTOR",
-      "minTimeout": "WATCHER_SHP_RETRY_MIN_TIMEOUT",
-      "maxTimeout": "WATCHER_SHP_RETRY_MAX_TIMEOUT",
-      "randomize": "WATCHER_SHP_RETRY_RANDOMIZE"
+      "retries": {
+        "__name": "WATCHER_SHP_RETRY_COUNT",
+        "__format": "number"
+      },
+      "factor": {
+        "__name": "WATCHER_SHP_RETRY_FACTOR",
+        "__format": "number"
+      },
+      "minTimeout": {
+        "__name": "WATCHER_SHP_RETRY_MIN_TIMEOUT",
+        "__format": "number"
+      },
+      "maxTimeout": {
+        "__name": "WATCHER_SHP_RETRY_MAX_TIMEOUT",
+        "__format": "number"
+      },
+      "randomize": {
+        "__name": "WATCHER_SHP_RETRY_RANDOMIZE",
+        "__format": "boolean"
+      }
     }
   },
   "overseer": {
