@@ -1,57 +1,83 @@
 openapi: 3.0.1
 info:
-  title: service-name
-  description: basic template for map colonies service
-  version: 1.0.0
+  title: discrete-agent
+  description: Map Colonies Discrete Agent service
+  version: 1.7.0
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
-
 paths:
-  /anotherResource:
-    get:
-      operationId: getAnotherResource
-      tags:
-        - anotherResource
-      summary: gets the resource
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/anotherResource'
-  /resourceName:
-    get:
-      operationId: getResourceName
-      tags:
-        - resourceName
-      summary: gets the resource
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/resource'
+  /trigger:
     post:
-      operationId: createResource
+      operationId: CreateLayer
       tags:
-        - resourceName
-      summary: creates a new record of type resource
+        - ManualTrigger
+      summary: trigger layer creation from source directory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createLayerRequest'
       responses:
-        201:
-          description: created
+        '200':
+          description: OK
           content:
-            application/json:
+            text/plain:
               schema:
-                $ref: '#/components/schemas/resource'
-        400:
+                type: string
+                example: task deleted successfully
+        '400':
           description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+  /status:
+    get:
+      operationId: getWatchStatus
+      tags:
+        - WatchStatus
+      summary: returns the watching status of the agent.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/watchStatus'
+  /status/start:
+    post:
+      operationId: startWatching
+      tags:
+        - WatchStatus
+      summary: starts the agent file watcher.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/watchStatus'
+  /status/stop:
+    post:
+      operationId: stopWatching
+      tags:
+        - WatchStatus
+      summary: stops the agent file watcher.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/watchStatus'
 components:
   schemas:
     error:
@@ -61,27 +87,16 @@ components:
       properties:
         message:
           type: string
-    resource:
+    createLayerRequest:
       type: object
       required:
-        - id
-        - name
-        - description
+        - sourceDirectory
       properties:
-        id:
-          type: number
-          format: int64
-        name:
+        sourceDirectory:
+          description: layer root directory relative to mount directory
           type: string
-        description:
-          type: string
-    anotherResource:
+    watchStatus:
       type: object
-      required:
-        - kind
-        - isAlive
       properties:
-        kind:
-          type: string
-        isAlive:
+        watching:
           type: boolean

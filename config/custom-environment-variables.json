@@ -38,5 +38,85 @@
         }
       }
     }
+  },
+  "mountDir": "MOUNT_DIRECTORY",
+  "watcher": {
+    "rootDirNestingLevel": {
+      "__name": "ROOT_DIR_NESTING_LEVEL",
+      "__format": "number"
+    },
+    "watchDirectory": "WATCH_DIRECTORY",
+    "watchOptions": {
+      "minTriggerDepth": {
+        "__name": "WATCH_MIN_TRIGGER_DEPTH",
+        "__format": "number"
+      },
+      "maxWatchDepth": {
+        "__name": "WATCH_MAX_TRIGGER_DEPTH",
+        "__format": "number"
+      },
+      "interval": {
+        "__name": "WATCH_INTERVAL",
+        "__format": "number"
+      }
+    },
+    "shpRetry": {
+      "retries": {
+        "__name": "WATCHER_SHP_RETRY_COUNT",
+        "__format": "number"
+      },
+      "factor": {
+        "__name": "WATCHER_SHP_RETRY_FACTOR",
+        "__format": "number"
+      },
+      "minTimeout": {
+        "__name": "WATCHER_SHP_RETRY_MIN_TIMEOUT",
+        "__format": "number"
+      },
+      "maxTimeout": {
+        "__name": "WATCHER_SHP_RETRY_MAX_TIMEOUT",
+        "__format": "number"
+      },
+      "randomize": {
+        "__name": "WATCHER_SHP_RETRY_RANDOMIZE",
+        "__format": "boolean"
+      }
+    }
+  },
+  "overseer": {
+    "url": "OVERSEER_URL"
+  },
+  "agentDB": {
+    "url": "AGENT_DB_URL"
+  },
+  "externalReadinessUrl": "EXTERNAL_READINESS_URL",
+  "httpRetry": {
+    "attempts": {
+      "__name": "HTTP_RETRY_ATTEMPTS",
+      "__format": "number"
+    },
+    "delay": "HTTP_RETRY_DELAY",
+    "shouldResetTimeout": {
+      "__name": "HTTP_RETRY_RESET_TIMEOUT",
+      "__format": "boolean"
+    }
+  },
+  "S3": {
+    "accessKeyId": "S3_ACCESS_KEY_ID",
+    "secretAccessKey": "S3_SECRET_ACCESS_KEY",
+    "endpoint": "S3_ENDPOINT",
+    "bucket": "S3_BUCKET",
+    "forcePathStyle": {
+      "__name": "S3_FORCE_PATH_STYLE",
+      "__format": "boolean"
+    },
+    "sslEnabled": {
+      "__name": "S3_SSL_ENABLED",
+      "__format": "boolean"
+    }
+  },
+  "classification": {
+    "optionsFileLocation": "CLASSIFICATION_OPTIONS_FILE_LOCATION",
+    "storageProvider": "CLASSIFICATION_OPTIONS_STORAGE_PROVIDER"
   }
 }
