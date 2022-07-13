@@ -45,10 +45,7 @@
       "__name": "ROOT_DIR_NESTING_LEVEL",
       "__format": "number"
     },
-    "watchDirectory": {
-      "__name": "WATCH_DIRECTORY",
-      "__format": "number"
-    },
+    "watchDirectory": "WATCH_DIRECTORY",
     "watchOptions": {
       "minTriggerDepth": {
         "__name": "WATCH_MIN_TRIGGER_DEPTH",
