@@ -28,7 +28,6 @@ export class MetadataMapper {
     this.parseRegion(metadata, metadataGeoJson);
 
     this.parseRawProductData(metadata, productGeoJson);
-
     return metadata;
   }
 
@@ -87,7 +86,6 @@ export class MetadataMapper {
     }
     metadata.sourceDateStart = minDate;
     metadata.sourceDateEnd = maxDate;
-    metadata.updateDate = new Date();
   }
 
   private parseSensorTypes(metadata: LayerMetadata, metadataGeoJson: GeoJSON): void {

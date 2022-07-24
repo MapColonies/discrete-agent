@@ -44,7 +44,6 @@ export const ingestionParams = {
     productName: 'product',
     productType: 'Orthophoto',
     productSubType: undefined,
-    updateDate: '2019-04-06T00:00:00.000Z',
     sourceDateEnd: '2019-04-06T00:00:00.000Z',
     sourceDateStart: '2019-04-06T00:00:00.000Z',
     region: ['c1', 'c2'],
