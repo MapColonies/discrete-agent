@@ -1,6 +1,6 @@
 {
   "name": "discrete-agent",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "This service is used to trigger Map Colonies discrete ingestion flow by watching file system or through rest trigger",
   "main": "./src/index.ts",
   "scripts": {
