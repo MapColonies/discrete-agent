@@ -22,7 +22,7 @@ rasterCommon:
 
     s3:
       endpointUrl: 'http://localhost:9000'
-      bucket: 'raster'
+      tilesBucket: 'raster'
       forcePathStyle: true
       sslEnabled: false
       virtualHosting: false
