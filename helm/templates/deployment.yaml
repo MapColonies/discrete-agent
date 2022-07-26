@@ -93,7 +93,7 @@ spec:
             - name: S3_ENDPOINT
               value: {{ .Values.rasterCommon.storage.s3.endpointUrl | quote }}
             - name: S3_BUCKET
-              value: {{ .Values.rasterCommon.storage.s3.bucket | quote }}
+              value: {{ .Values.rasterCommon.storage.s3.tilesBucket | quote }}
             - name: S3_FORCE_PATH_STYLE
               value: {{ .Values.rasterCommon.storage.s3.forcePathStyle | quote }}
             - name: S3_SSL_ENABLED
