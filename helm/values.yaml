@@ -106,7 +106,8 @@ route:
     duration: 60s # supported units (us, ms, s, m, h, d)
 
 ingress:
-  enabled: false
+  enabled: true
+  type: 'nginx-org' # supported values: 'nginx-org' | 'nginx-kubernetes'
   path: /
   host: 'localhost'
   cors:
