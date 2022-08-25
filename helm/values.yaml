@@ -81,6 +81,7 @@ env:
     shouldResetTimeout: true
   classification:
     storageProvider: FS
+    defaultClassification: 3
   tracing:
     enabled: false
     url: http://localhost:55681/v1/trace

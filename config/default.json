@@ -64,6 +64,7 @@
   },
   "classification": {
     "optionsFileLocation": "config/classification.json",
-    "storageProvider": "FS"
+    "storageProvider": "FS",
+    "defaultClassification": 3
   }
 }
