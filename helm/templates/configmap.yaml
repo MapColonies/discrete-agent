@@ -25,6 +25,7 @@ data:
   HTTP_RETRY_DELAY: {{ .Values.env.httpRetry.delay | quote }}
   HTTP_RETRY_RESET_TIMEOUT: {{ .Values.env.httpRetry.shouldResetTimeout | quote }}
   CLASSIFICATION_OPTIONS_STORAGE_PROVIDER: {{ .Values.env.classification.storageProvider | quote }}
+  DEFAULT_CLASSIFICATION: {{ .Values.env.classification.defaultClassification | quote }}
   REQUEST_PAYLOAD_LIMIT: {{ .Values.env.requestPayloadLimit | quote }}
   RESPONSE_COMPRESSION_ENABLED: {{ .Values.env.responseCompressionEnabled | quote }}
   {{ if .Values.env.tracing.enabled }}

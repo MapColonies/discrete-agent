@@ -193,11 +193,81 @@ describe('classifier', () => {
       expect(readS3ObjectAsStringMock).toHaveBeenCalledTimes(0);
       expect(readAsStringMock).toHaveBeenCalledTimes(1);
     });
+
+    describe('getClassification', () => {
+      it('use default classification value if configuration file is not exists when configured to use s3', async () => {
+        const mockNoSuchKey = {
+          code: 'NoSuchKey',
+          message: 'The specified key does not exist.',
+        };
+        readAsStringMock.mockClear();
+        readS3ObjectAsStringMock.mockClear();
+        readS3ObjectAsStringMock.mockRejectedValue(mockNoSuchKey);
+        setConfigValues({
+          classification: {
+            optionsFileLocation: 'testPath',
+            storageProvider: 'S3',
+            defaultClassification: 4,
+          },
+        });
+
+        const res = 0.05;
+        const polygon = [
+          [
+            [0, 0],
+            [0, 1],
+            [1, 1],
+            [1, 0],
+            [0, 0],
+          ],
+        ];
+        // action
+        classifier = new Classifier(configMock, filesManagerMock);
+        const classification = await classifier.getClassification(res, polygon);
+
+        // expectation
+        expect(classification).toBe(4);
+      });
+    });
+
+    it('use default classification value if configuration file is not exists when configured to use fs', async () => {
+      const fileIsNotExists = {
+        code: 'ENOENT',
+        message: 'File is not exists.',
+      };
+      readAsStringMock.mockClear();
+      readS3ObjectAsStringMock.mockClear();
+      readAsStringMock.mockRejectedValue(fileIsNotExists);
+      setConfigValues({
+        classification: {
+          optionsFileLocation: 'testPath',
+          storageProvider: 'FS',
+          defaultClassification: 4,
+        },
+      });
+
+      const res = 0.05;
+      const polygon = [
+        [
+          [0, 0],
+          [0, 1],
+          [1, 1],
+          [1, 0],
+          [0, 0],
+        ],
+      ];
+      // action
+      classifier = new Classifier(configMock, filesManagerMock);
+      const classification = await classifier.getClassification(res, polygon);
+
+      // expectation
+      expect(classification).toBe(4);
+    });
   });
+
+  function loadTestData() {
+    const classificationConfigPath = resolve(__dirname, '../../../mockData/classification.json');
+
+    classificationConfig = readFileSync(classificationConfigPath, { encoding: 'utf8' });
+  }
 });
-
-function loadTestData() {
-  const classificationConfigPath = resolve(__dirname, '../../../mockData/classification.json');
-
-  classificationConfig = readFileSync(classificationConfigPath, { encoding: 'utf8' });
-}

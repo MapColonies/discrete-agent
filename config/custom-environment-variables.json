@@ -117,6 +117,10 @@
   },
   "classification": {
     "optionsFileLocation": "CLASSIFICATION_OPTIONS_FILE_LOCATION",
-    "storageProvider": "CLASSIFICATION_OPTIONS_STORAGE_PROVIDER"
+    "storageProvider": "CLASSIFICATION_OPTIONS_STORAGE_PROVIDER",
+    "defaultClassification": {
+      "__name": "DEFAULT_CLASSIFICATION",
+      "__format": "number"
+    }
   }
 }

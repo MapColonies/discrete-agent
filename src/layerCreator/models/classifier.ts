@@ -22,6 +22,7 @@ export class Classifier {
   private resolutionRules: IResolutionRule[] | undefined;
   private classificationPolygon: Feature<Polygon> | undefined;
   private defaultClassification: number | undefined;
+  private useDeafultValues = false;
 
   private readonly ready: Promise<void>;
 
@@ -40,16 +41,31 @@ export class Classifier {
       default:
         throw new Error(`unsupported classification options provider: ${classificationProvider}`);
     }
-    this.ready = options.then((rawOptions) => {
-      const parsedOptions = JSON.parse(rawOptions) as IClassificationOption;
-      this.resolutionRules = parsedOptions.resolutionRules.sort((rule1, rule2) => rule1.value - rule2.value);
-      this.classificationPolygon = polygon(parsedOptions.polygonCoordinates);
-      this.defaultClassification = parsedOptions.defaultValue;
-    });
+    this.ready = options
+      .then((rawOptions) => {
+        const parsedOptions = JSON.parse(rawOptions) as IClassificationOption;
+        this.resolutionRules = parsedOptions.resolutionRules.sort((rule1, rule2) => rule1.value - rule2.value);
+        this.classificationPolygon = polygon(parsedOptions.polygonCoordinates);
+        this.defaultClassification = parsedOptions.defaultValue;
+      })
+      .catch((error) => {
+        /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+        if (error.code === 'NoSuchKey' || error.code === 'ENOENT') {
+          this.useDeafultValues = true;
+          this.defaultClassification = config.get<number>('classification.defaultClassification');
+        } else {
+          throw error;
+        }
+      });
   }
 
   public async getClassification(resolution: number, polygonCoordinates: number[][][]): Promise<number> {
     await this.ready;
+    if (this.useDeafultValues) {
+      if (this.defaultClassification !== undefined) {
+        return this.defaultClassification;
+      }
+    }
     const polygonFeature = polygon(polygonCoordinates);
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
     const intersection = intersect(this.classificationPolygon!, polygonFeature);
