@@ -23,7 +23,7 @@ export const registerExternalValues = (options?: RegisterOptions): DependencyCon
   tracing.start();
   const tracer = trace.getTracer(SERVICE_NAME);
   const mountDir = config.get<string>('mountDir');
-  const watchDir = config.get<string>('watcher.watchDirectory');
+  const watchDir = config.get<string>('watchDirectory');
   const relativeWatchDirPath = join(mountDir, watchDir);
 
   const dependencies: InjectionObject<unknown>[] = [

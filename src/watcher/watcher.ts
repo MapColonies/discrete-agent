@@ -74,7 +74,7 @@ export class Watcher {
 
   private loadWatchOptions(config: IConfig): void {
     const mountDir = config.get<string>('mountDir');
-    const watchDir = config.get<string>('watcher.watchDirectory');
+    const watchDir = config.get<string>('watchDirectory');
     this.watchTarget = joinPath(mountDir, watchDir);
     const options = config.get<WatchOptions>('watcher.watchOptions');
     this.minTriggerDepth = toInteger(options.minTriggerDepth);

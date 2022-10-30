@@ -33,8 +33,8 @@ const registerDefaultConfig = (): void => {
       port: '8080',
     },
     mountDir: '/layerSources',
+    watchDirectory: 'watch',
     watcher: {
-      watchDirectory: 'watch',
       rootDirNestingLevel: 1,
       watchOptions: {
         minTriggerDepth: 1,

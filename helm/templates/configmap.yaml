@@ -10,7 +10,7 @@ data:
   LOG_LEVEL: {{ .Values.env.logLevel | quote }}
   LOG_PRETTY_PRINT_ENABLED: {{ .Values.env.logPrettyPrintEnabled | quote }}
   ROOT_DIR_NESTING_LEVEL: {{ .Values.env.watcher.rootDirNestingLevel | quote }}
-  WATCH_DIRECTORY: {{ .Values.env.watcher.directory | quote }}
+  WATCH_DIRECTORY: {{ .Values.rasterCommon.ingestion.watchDirectoryOptions.directory | quote }}
   WATCH_MIN_TRIGGER_DEPTH: {{ .Values.env.watcher.options.minTriggerDepth | quote }}
   WATCH_MAX_TRIGGER_DEPTH: {{ .Values.env.watcher.options.maxWatchDepth | quote }}
   WATCH_INTERVAL: {{ .Values.env.watcher.options.interval | quote }}
