@@ -16,7 +16,7 @@ const realTimeout = setTimeout;
 describe('watcher', () => {
   beforeEach(() => {
     configData['mountDir'] = '/mountDir';
-    configData['watcher.watchDirectory'] = 'watch';
+    configData['watchDirectory'] = 'watch';
     configData['watcher.watchOptions'] = {
       minTriggerDepth: 1,
       maxWatchDepth: 2,

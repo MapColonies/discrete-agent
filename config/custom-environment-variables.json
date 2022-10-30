@@ -40,12 +40,12 @@
     }
   },
   "mountDir": "MOUNT_DIRECTORY",
+  "watchDirectory": "WATCH_DIRECTORY",
   "watcher": {
     "rootDirNestingLevel": {
       "__name": "ROOT_DIR_NESTING_LEVEL",
       "__format": "number"
     },
-    "watchDirectory": "WATCH_DIRECTORY",
     "watchOptions": {
       "minTriggerDepth": {
         "__name": "WATCH_MIN_TRIGGER_DEPTH",
