@@ -71,4 +71,5 @@ export const metadata = {
   },
   includedInBests: undefined,
   productBoundingBox: undefined,
+  transparency: 'TRANSPARENT',
 };

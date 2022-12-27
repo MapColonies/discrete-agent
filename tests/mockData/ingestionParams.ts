@@ -1,5 +1,7 @@
+import { Transparency } from '@map-colonies/mc-model-types';
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-magic-numbers */
+
 export const ingestionParams = {
   originDirectory: 'test',
   fileNames: [
@@ -51,6 +53,7 @@ export const ingestionParams = {
     srsId: undefined,
     srsName: undefined,
     type: 'RECORD_RASTER',
+    transparency: Transparency.TRANSPARENT,
     layerPolygonParts: {
       type: 'FeatureCollection',
       features: [

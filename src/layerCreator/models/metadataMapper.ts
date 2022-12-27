@@ -1,4 +1,4 @@
-import { IPropSHPMapping, LayerMetadata, DataFileType, TsTypes } from '@map-colonies/mc-model-types';
+import { IPropSHPMapping, LayerMetadata, DataFileType, TsTypes, Transparency } from '@map-colonies/mc-model-types';
 import { injectable } from 'tsyringe';
 import { FeatureCollection, GeoJSON, Polygon } from 'geojson';
 import { get as readProp, toNumber, isNil } from 'lodash';
@@ -59,6 +59,8 @@ export class MetadataMapper {
       const value = readProp(sources[map.dataFile], map.valuePath) as unknown;
       metadata[map.prop] = this.castValue(value, type);
     });
+    // todo - should consider on future make it dynamic if it will support opaque too
+    metadata.transparency = Transparency.TRANSPARENT;
   }
 
   private parseIdentifiers(metadata: LayerMetadata, metadataGeoJson: GeoJSON): void {
