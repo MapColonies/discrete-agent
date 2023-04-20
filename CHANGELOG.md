@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/MapColonies/discrete-agent/compare/v1.7.3...v1.9.0) (2023-04-20)
+
+
+### Features
+
+* adding compatibility with new mc-models including transparency ([#15](https://github.com/MapColonies/discrete-agent/issues/15)) ([8c1fa15](https://github.com/MapColonies/discrete-agent/commit/8c1fa157b2941f464c20f4c4a00ff3f5eb0cc2cf))
+
+
+### Bug Fixes
+
+* chart ([#18](https://github.com/MapColonies/discrete-agent/issues/18)) ([63af04f](https://github.com/MapColonies/discrete-agent/commit/63af04f63e0a61fe2fe25797e1c99cb4f57a7e71))
+
 ## [1.8.0](https://github.com/MapColonies/discrete-agent/compare/v1.7.4...v1.8.0) (2022-12-27)
 
 
